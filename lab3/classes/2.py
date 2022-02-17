@@ -5,7 +5,6 @@ class Shape():
         return 0
 class Square(Shape):
     def __init__(self, len):
-        Shape.__init__(self)
         self.length = len
     
     def area(self):

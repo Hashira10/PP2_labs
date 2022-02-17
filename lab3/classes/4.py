@@ -12,13 +12,13 @@ class Point():
         self.old_y = self.y 
         self.x = b 
         self.y = c
-        print("( " + str(self.x) + " ; " + str(self.y) + " )")
+        
     def dist(self):
         return ((self.x - self.old_x)**2 + (self.y - self.old_y)**2)**0.5
 
 
 a,b,c,d = map(int, input().split())
 l = Point(a,b)
-l.show
+l.show()
 l.move(c,d)
 print(l.dist())

@@ -1,0 +1,6 @@
+x = (True, False, True,True)
+y = (733,0,83)
+z = (3,9,3)
+print(all(x))
+print(all(y))
+print(all(z))

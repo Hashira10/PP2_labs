@@ -16,8 +16,7 @@ WHITE = (255, 255, 255)
 RED   = (255, 0, 0)
 
 #Other Variables for use in the program
-SCREEN_WIDTH = 400
-SCREEN_HEIGHT = 600
+
 SPEED = 5
 SCORE = 0
 SCORE_COINS = 0

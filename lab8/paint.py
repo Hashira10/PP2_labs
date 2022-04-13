@@ -27,9 +27,9 @@ def drawRectangle(screen, start, end, width, color):
     x2 = end[0]
     y1 = start[1]
     y2 = end[1]
-    widthr = abs(x1 - x2)
-    height = abs(y1 - y2)
-    pygame.draw.rect(screen, pygame.Color(color), (x1, y1, widthr, height), width)
+    a = abs(x1 - x2)
+    b = abs(y1 - y2)
+    pygame.draw.rect(screen, pygame.Color(color), (x1, y1, a, b), width)
 
 prevX = 0
 prevY = 0

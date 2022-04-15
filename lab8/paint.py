@@ -1,102 +1,106 @@
 import pygame
+from random import randrange
+
+width = 650
+height = 650
+block_size = 25
+length = 1
+score = 0
+level = 0
+x, y = randrange(0, width, block_size), randrange(0, height, block_size)
+food = randrange(0, width, block_size), randrange(0, height, block_size)
+wall = randrange(0, width - block_size * 3, block_size), randrange(0, height, block_size)
+snake = [(x, y)]
+dx, dy = 0, 0
+FPS = 10
+d = {'UP': True, 'DOWN': True, 'LEFT': True, 'RIGHT': True}
+
 pygame.init()
 
-#screen settings
-screen = pygame.display.set_mode([1200,600])
+screen = pygame.display.set_mode([width, height])
 clock = pygame.time.Clock()
-screen.fill(pygame.Color('white')) 
-
-draw = False                # click - draw
-radius = 15                 # radius for tools
-color = 'blue'              # base color
-mode = 'line'                # basic mode
-
-def drawCircle(screen, start, end, width, color):
-    x1 = start[0]
-    x2 = end[0]
-    y1 = start[1]
-    y2 = end[1]
-    #the formula for the center of the circle
-    x = (x1 + x2) / 2
-    y = (y1 + y2) / 2
-    radius = abs(x1 - x2) / 2
-    pygame.draw.circle(screen, pygame.Color(color), (x, y), radius, width)
-
-def drawRectangle(screen, start, end, width, color):
-    x1 = start[0]
-    x2 = end[0]
-    y1 = start[1]
-    y2 = end[1]
-    pygame.draw.line(screen,pygame.Color(color),(x1,y1),(x2,y1),width)
-    pygame.draw.line(screen,pygame.Color(color),(x1,y1),(x1,y2),width)
-    pygame.draw.line(screen,pygame.Color(color),(x1,y2),(x2,y2),width)
-    pygame.draw.line(screen,pygame.Color(color),(x2,y1),(x2,y2),width)
-
-prevX = 0
-prevY = 0
+score_settings = pygame.font.SysFont('Arial', 16, bold=True)
+level_settings = pygame.font.SysFont('Arial', 16, bold=True)
+end_settings = pygame.font.SysFont('Arial', 66, bold=True)
+background = pygame.image.load('s_back.jpg').convert()
 
 while True:
-    # events
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             exit()
-        
-        # pressing the keyboard
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_l:
-                mode = 'line'
-            if event.key == pygame.K_r:
-                mode = 'rectangle'
-            if event.key == pygame.K_c:
-                mode = 'circle'
-            if event.key == pygame.K_e:
-                mode = 'erase'
-            if event.key == pygame.K_y:
-                color = 'yellow'
-            if event.key == pygame.K_b:
-                color = 'blue'
-            if event.key == pygame.K_g:
-                color = 'green'
-            if event.key == pygame.K_UP:
-                radius = min(200, radius + 1)   
-            if event.key == pygame.K_DOWN:
-                radius = max(1, radius - 1)     
 
-        # clicking on the left mouse button
-        if event.type == pygame.MOUSEBUTTONDOWN: 
-            draw = True
-            prevX =  event.pos[0]
-            prevY =  event.pos[1]
-            prevPos = event.pos
-        
-        # the initial position of the mouse
-        currentX = prevX
-        currentY = prevY
-        
-        # release the left mouse button
-        if event.type == pygame.MOUSEBUTTONUP: 
-            if mode == 'rectangle':
-                drawRectangle(screen, prevPos, event.pos, radius, color)
-            elif mode == 'circle':
-                drawCircle(screen, prevPos, event.pos, radius, color)
-            draw = False
+    screen.blit(background, (0, 0))
 
-        # moving the mouse
-        if event.type == pygame.MOUSEMOTION: 
-            if draw:
-                if mode == 'line' or mode == 'erase':
-                    # changing the position
-                    currentX =  event.pos[0]
-                    currentY =  event.pos[1]
-            
-        
-        if mode == 'line' and draw == True:
-            pygame.draw.circle(screen, color, (currentX, currentY), radius)
-        if mode == 'erase' and draw == True:
-            pygame.draw.circle(screen, (255,255,255), (currentX, currentY), radius)
-        prevX = currentX
-        prevY = currentY
+    while food == wall or food == snake or snake == wall:
+        x, y = randrange(0, width, block_size), randrange(0, height, block_size)
+        food = randrange(0, width, block_size), randrange(0, height, block_size)
+        wall = randrange(0, width - block_size * 3, block_size), randrange(0, height, block_size)
+
+
+    # drawing snake and food
+    for i, j in snake:
+        pygame.draw.rect(screen, pygame.Color('black'), (i, j, block_size - 1, block_size - 1))
+    pygame.draw.rect(screen, pygame.Color('orange'), (*food, block_size, block_size))
+    pygame.draw.rect(screen, pygame.Color('green'), (*wall, block_size, block_size ))
     
-    # display
+
+    # score, level
+    render_score = score_settings.render(f'SCORE: {score}', True, pygame.Color('red'))
+    screen.blit(render_score, (5, 5))
+    render_level = level_settings.render(f'LEVEL: {level}', True, pygame.Color('red'))
+    screen.blit(render_level, (5, 20))   
+
+
+    # movement
+    x += dx * block_size
+    y += dy * block_size
+    snake.append((x, y))
+    snake = snake[-length:]
+        
+    # eating food
+    if snake[-1] == food:
+        while food in snake:
+            food = randrange(0, width, block_size), randrange(0, height, block_size)
+        length += 1
+        score += 1
+        if score % 4 == 0 and score != 0:
+            FPS += 2
+            level += 1
+
+    # motion control
+    key = pygame.key.get_pressed()
+    if key[pygame.K_UP] and d['UP']:
+        d = {'UP': True, 'DOWN': False, 'LEFT': True, 'RIGHT': True} #If we go up we can't go down right away
+        dx = 0
+        dy = -1
+        
+    if key[pygame.K_DOWN] and d['DOWN']:
+        d = {'UP': False, 'DOWN': True, 'LEFT': True, 'RIGHT': True} #If we go down we can't go up right away
+        dx = 0
+        dy = 1
+        
+    if key[pygame.K_RIGHT] and d['RIGHT']:
+        d = {'UP': True, 'DOWN': True, 'LEFT': False, 'RIGHT': True}
+        dx = 1
+        dy = 0
+        
+    if key[pygame.K_LEFT] and d['LEFT']:
+        d = {'UP': True, 'DOWN': True, 'LEFT': True, 'RIGHT': False}
+        dx = -1
+        dy = 0
+        
+    
+
+    # game over if the snake goes over the wall or it collides with the length of its body
+    if x < 0 or x > width - block_size or y < 0 or y > height - block_size or len(snake) > len(set(snake)) or snake[-1] == wall: 
+        while True:
+            render_end = end_settings.render('GAME OVER', True, pygame.Color('red'))
+            screen.blit(render_end, (135, 280))
+            pygame.display.flip()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit()
+
+
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(FPS)

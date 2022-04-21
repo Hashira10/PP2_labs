@@ -1,7 +1,7 @@
 import pygame
 import os
 
-size = (1440//2,900//2)
+size = (720,450)
 cnt = 0
 w,a,s,d = False,False,False,False
 
@@ -9,7 +9,7 @@ pygame.init()
 songs = []
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode(size)
-muse = pygame.transform.scale(pygame.image.load('music.png'), (1440//2,900//2))
+muse = pygame.transform.scale(pygame.image.load('music.png'), size)
 
 for i in os.listdir("C:\\Users\\Olga\\songs"):
     k = pygame.mixer.Sound("C:\\Users\\Olga\\songs\\" + str(i))

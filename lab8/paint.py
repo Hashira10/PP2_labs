@@ -5,11 +5,14 @@ pygame.init()
 screen = pygame.display.set_mode([1200,600])
 clock = pygame.time.Clock()
 screen.fill(pygame.Color('white')) 
-
-draw = False                # click - draw
-radius = 15                 # radius for tools
-color = 'blue'              # base color
-mode = 'line'                # basic mode
+# click - draw
+draw = False  
+# radius for tools
+radius = 15  
+# base color
+color = 'blue' 
+# basic mode
+mode = 'line'                
 
 def drawCircle(screen, start, end, width, color):
     x1 = start[0]

@@ -36,10 +36,10 @@ while True:
     minute = current_time.minute
 
     theta = (minute + second/60) * (360 / 60)
-    blitRotate(screen, Right, center, (Right.get_width() / 2 + 110, Left.get_height() / 2 + 75), theta + 75)
+    blitRotate(screen, Right, center, (Right.get_width() / 2 + 110, Left.get_height() / 2 + 75), theta)
 
     theta = second * (360 / 60)
-    blitRotate(screen, Left, center, (Left.get_width() / 2 - 145, Left.get_height() / 2), theta - 87)
+    blitRotate(screen, Left, center, (Left.get_width() / 2 - 145, Left.get_height() / 2), theta)
 
     pygame.display.flip()
     clock.tick(60)

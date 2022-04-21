@@ -2,7 +2,6 @@ import pygame
 import os
 
 size = (1440//2,900//2)
-fps = 3
 cnt = 0
 w,a,s,d = False,False,False,False
 
@@ -55,4 +54,3 @@ while True:
         d = False
 
     pygame.display.flip()
-    clock.tick(fps)

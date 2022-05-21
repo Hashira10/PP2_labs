@@ -1,5 +1,5 @@
 l = []
-def а(a,b):
+def my_func(a,b):
     if l[b] == -1:
         if(b >= len(a) - 1):
             l[b] = 1
@@ -15,7 +15,7 @@ a = list(map(int, input().split()))
 for i in range(len(a)):
     l.append(-1)
 
-print(а(a,0))
+print(my_func(a,0))
 
 
 
